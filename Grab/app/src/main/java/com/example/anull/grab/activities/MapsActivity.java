@@ -1,10 +1,14 @@
 package com.example.anull.grab.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.RelativeLayout;
 
 import com.example.anull.grab.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +25,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_maps2);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

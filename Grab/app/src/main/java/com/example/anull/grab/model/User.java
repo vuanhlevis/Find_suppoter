@@ -5,9 +5,19 @@ package com.example.anull.grab.model;
  */
 
 public class User {
-    private String email, password, name, phone;
+    private String email, password, name, phone, available;
+
+
+    public String getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(String available) {
+        this.available = available;
+    }
 
     public User() {
+        this.available = "0";
     }
 
     public User(String email, String password, String name, String phone) {

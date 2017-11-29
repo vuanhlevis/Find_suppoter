@@ -226,6 +226,10 @@ public class LoginActivity extends AppCompatActivity {
                             user.setPassword(mt_pass.getText().toString());
                             user.setPhone(mt_phone.getText().toString());
                             user.setName(mt_name.getText().toString());
+                            user.setAvailable("0");
+
+                            final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this);
+                            waitingDialog.show();
 
                             //use key = email
                             users.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -234,10 +238,31 @@ public class LoginActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                waitingDialog.dismiss();
                                                 Snackbar.make(loginLayout, "Register Success Fully"
                                                         , Snackbar.LENGTH_SHORT).show();
+                                                firebaseAuth.signInWithEmailAndPassword(mt_email.getText().toString(),
+                                                        mt_pass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                                        if (task.isSuccessful()) {
+                                                            waitingDialog.dismiss();
+                                                            Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+
+                                                        } else {
+                                                            waitingDialog.dismiss();
+                                                            Toast.makeText(LoginActivity.this, task.getException().getMessage(),
+                                                                    Toast.LENGTH_SHORT).show();
+
+                                                            // enable bt
+                                                            bt_signIn.setEnabled(true);
+                                                        }
+                                                    }
+                                                });
 
                                             } else {
+                                                waitingDialog.dismiss();
                                                 Toast.makeText(LoginActivity.this, task.getException().getMessage()
                                                         , Toast.LENGTH_SHORT).show();
                                             }
@@ -247,6 +272,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(LoginActivity.this, task.getException().getMessage()
                                     , Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 });
