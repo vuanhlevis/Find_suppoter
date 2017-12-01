@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -32,6 +36,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class LoginActivity extends AppCompatActivity {
 
     Button bt_signIn, bt_Register;
+    Animation downtoup;
+    LinearLayout ln_button;
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase db;
@@ -56,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         setUpInput();
+        ln_button.setAnimation(downtoup);
 
         bt_Register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(mt_email.getText().toString())) {
                     Snackbar.make(loginLayout, "Enter Your Email Adress", Snackbar.LENGTH_SHORT)
                             .show();
+                    bt_signIn.setEnabled(true);
                     return;
                 }
 
@@ -110,12 +118,14 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(mt_pass.getText().toString())) {
                     Snackbar.make(loginLayout, "Enter Your Password", Snackbar.LENGTH_SHORT)
                             .show();
+                    bt_signIn.setEnabled(true);
                     return;
                 }
 
                 if ((mt_pass.getText().toString().length() < 6)) {
                     Snackbar.make(loginLayout, "Password must be more 6 character", Snackbar.LENGTH_SHORT)
                             .show();
+                    bt_signIn.setEnabled(true);
                     return;
                 }
 
@@ -131,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             waitingDialog.dismiss();
                             Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+                            startActivity(new Intent(LoginActivity.this, NavigatinActivity.class));
 
                         } else {
                             waitingDialog.dismiss();
@@ -248,7 +258,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             waitingDialog.dismiss();
                                                             Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                                                            startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+                                                            startActivity(new Intent(LoginActivity.this, NavigationView.class));
 
                                                         } else {
                                                             waitingDialog.dismiss();
@@ -294,6 +304,8 @@ public class LoginActivity extends AppCompatActivity {
         bt_Register = findViewById(R.id.bt_register);
         bt_signIn = findViewById(R.id.bt_signin);
         loginLayout = findViewById(R.id.login_layout);
+        downtoup = AnimationUtils.loadAnimation(this, R.anim.downto_up);
+        ln_button = findViewById(R.id.ln_button);
 
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
