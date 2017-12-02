@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header"
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:background="@drawable/background_header"
@@ -12,17 +13,18 @@
         android:src="@mipmap/ic_launcher" />
 
     <TextView
+        android:id="@+id/tv_name_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Vũ Cơ"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
+
     <TextView
+        android:id="@+id/tv_email_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="vuanhlevis@gmail.com"
 
-        />
+        android:text="vuanhlevis@gmail.com" />
 
 </LinearLayout>

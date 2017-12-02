@@ -237,6 +237,7 @@ public class LoginActivity extends AppCompatActivity {
                             user.setPhone(mt_phone.getText().toString());
                             user.setName(mt_name.getText().toString());
                             user.setAvailable("0");
+                            user.setRating("3.5");
 
                             final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this);
                             waitingDialog.show();
@@ -258,7 +259,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             waitingDialog.dismiss();
                                                             Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                                                            startActivity(new Intent(LoginActivity.this, NavigationView.class));
+                                                            startActivity(new Intent(LoginActivity.this, NavigatinActivity.class));
 
                                                         } else {
                                                             waitingDialog.dismiss();
