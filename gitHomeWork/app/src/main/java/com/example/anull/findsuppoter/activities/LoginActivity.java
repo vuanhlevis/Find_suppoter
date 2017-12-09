@@ -113,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 // dissable bt signin if is processing
 
-
                 if (TextUtils.isEmpty(mt_email.getText().toString())) {
                     Snackbar.make(loginLayout, "Enter Your Email Adress", Snackbar.LENGTH_SHORT)
                             .show();

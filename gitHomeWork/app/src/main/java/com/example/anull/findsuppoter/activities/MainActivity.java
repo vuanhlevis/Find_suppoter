@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.anull.findsuppoter.R;
+import com.example.anull.findsuppoter.fragments.ChooseFragment;
 import com.example.anull.findsuppoter.fragments.MapFragment;
 import com.example.anull.findsuppoter.fragments.ProfileFragment;
 import com.example.anull.findsuppoter.model.User;
@@ -47,9 +49,6 @@ public class MainActivity extends AppCompatActivity
     private NavigationView nv_menu;
 
     private AVLoadingIndicatorView av_loadmain;
-
-    Typeface typefaceUtils;
-
 
     private TextView tv_name_header;
     private TextView tv_email_header;
@@ -199,6 +198,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.it_profile) {
             if (av_loadmain.isShown()) {
+
+
                 Snackbar.make(nv_menu, "Loading data", Snackbar.LENGTH_SHORT)
                         .show();
 
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity
                 android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.container, profile).commit();
                 toolbar.setTitle(item.getTitle());
+
 
             } else {
                 ProfileFragment profile = new ProfileFragment();
@@ -234,8 +236,11 @@ public class MainActivity extends AppCompatActivity
             this.startActivities(new Intent[]{intent});
 
 
-
         } else if (id == R.id.nav_share) {
+
+            ChooseFragment mapFragment = new ChooseFragment();
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.container, mapFragment).commit();
 
         } else if (id == R.id.nav_send) {
 
