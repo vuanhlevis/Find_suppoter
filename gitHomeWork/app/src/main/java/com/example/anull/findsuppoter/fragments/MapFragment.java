@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,16 +28,22 @@ import android.widget.Toast;
 
 import com.example.anull.findsuppoter.R;
 import com.example.anull.findsuppoter.Utils.ExpandableListAdapter;
+import com.example.anull.findsuppoter.Utils.MylocationListener;
 import com.example.anull.findsuppoter.model.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,18 +58,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.content.Context.LOCATION_SERVICE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback
-        {
+public class MapFragment extends Fragment implements OnMapReadyCallback {
     private CardView cv_choose;
     private TextView tv_chooseOption;
     private String findSupport = null;
     private Context context;
 
-    // location
+    private List<User> userList;
 
+    // location
+    private LatLng mlocation = null;
+    private String mylocation = null;
 
     //
     private ExpandableListView listView;
@@ -70,6 +81,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
 
     private List<String> listDataheader;
     private HashMap<String, List<String>> listHash;
+    private List<MarkerOptions> markerOptionsList;
+
 
     private GoogleMap gg_map;
 
@@ -88,17 +101,68 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userList = new ArrayList<>();
+        markerOptionsList = new ArrayList<>();
 
         context = getContext();
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("users");
+        setupMap();
 
     }
+
+    private void setupMap() {
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.d(TAG, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
+                mlocation = new LatLng(location.getLatitude(), location.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mlocation, 15);
+                gg_map.animateCamera(cameraUpdate);
+
+                mylocation = location.getLatitude() + "," + location.getLongitude();
+                Log.d(TAG, "onLocationChanged: " + mlocation.toString());
+
+                getUser();
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1000, locationListener);
+
+    }
+
 
     private void setupInput() {
         cv_choose = mview.findViewById(R.id.cv_choose);
@@ -106,32 +170,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
 
     }
 
-//    private void getUser() {
-//        databaseReference.orderByChild("email").equalTo(firebaseAuth.getCurrentUser().getEmail())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        Log.d(TAG, "onDataChange: " + dataSnapshot);
-//                        if (dataSnapshot.getChildrenCount() > 0) {
-//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                Log.d(TAG, "map: snap" + snapshot);
-//                                User user = snapshot.getValue(User.class);
-//
-//                                user.setLocation(mLastlocation.getLatitude() + "," + mLastlocation.getLongitude());
-//
-//                                databaseReference.child(snapshot.getKey()).setValue(user);
-//                            }
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
+    private void getUser() {
+        databaseReference.orderByChild("email").equalTo(firebaseAuth.getCurrentUser().getEmail())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "onDataChange: " + dataSnapshot);
+                        if (dataSnapshot.getChildrenCount() > 0) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Log.d(TAG, "map: snap" + snapshot);
+                                User user = snapshot.getValue(User.class);
 
+                                user.setLocation(mylocation);
+
+                                databaseReference.child(snapshot.getKey()).setValue(user);
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
 
 
     @Override
@@ -179,6 +242,75 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
                                     .show();
                         } else
                             tv_chooseOption.setText(findSupport);
+
+                        databaseReference.orderByChild("available").equalTo("1")
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        userList.clear();
+                                        Log.d(TAG, "onDataChange: " + dataSnapshot);
+                                        if (dataSnapshot.getChildrenCount() > 0) {
+                                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+
+                                                Log.d(TAG, "onDataChange: snap" + userSnapshot);
+                                                User user = userSnapshot.getValue(User.class);
+
+                                                if (user.getEmail().equals(firebaseAuth.getCurrentUser().getEmail())) {
+
+                                                } else {
+                                                    userList.add(user);
+                                                }
+
+                                            }
+                                        }
+                                        if (markerOptionsList.size() > 0) {
+                                            for (int i = 0; i < markerOptionsList.size(); i++) {
+
+                                            }
+                                        }
+                                        gg_map.clear();
+
+                                        markerOptionsList.clear();
+                                        if (userList.size() > 0) {
+                                            for (int i = 0; i < userList.size(); i++) {
+                                                String[] parseLocation = userList.get(i).getLocation().split(",");
+                                                double lat = Double.parseDouble(parseLocation[0]);
+                                                double lng = Double.parseDouble(parseLocation[1]);
+                                                LatLng latLng = new LatLng(lat, lng);
+
+                                                MarkerOptions markerOptions = new MarkerOptions()
+                                                        .position(latLng);
+                                                gg_map.addMarker(markerOptions);
+
+                                                markerOptionsList.add(markerOptions);
+                                            }
+
+                                        } else {
+                                            Toast.makeText(getContext(), "There is no people available your option", Toast.LENGTH_SHORT).show();
+                                        }
+
+//                                        gg_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                                            @Override
+//                                            public boolean onMarkerClick(Marker marker) {
+//                                                if (markerOptionsList.size() > 0) {
+//                                                    for (int i = 0; i < markerOptionsList.size(); i++) {
+//
+//                                                    }
+//                                                }
+//
+//                                                return true;
+//                                            }
+//                                        });
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
                     }
                 });
 
@@ -270,5 +402,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
 
     }
 
-   
+
 }
