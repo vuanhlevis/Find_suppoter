@@ -12,6 +12,13 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
+        <Switch
+            android:id="@+id/sw_status"
+            android:text="Status"
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/et_password_editprofile"

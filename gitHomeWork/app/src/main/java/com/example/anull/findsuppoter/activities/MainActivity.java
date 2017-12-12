@@ -47,6 +47,11 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference users;
     private Toolbar toolbar;
     private NavigationView nv_menu;
+    // fragment
+    ProfileFragment profile = new ProfileFragment();
+
+    //
+
 
     private AVLoadingIndicatorView av_loadmain;
 
@@ -199,18 +204,16 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.it_profile) {
             if (av_loadmain.isShown()) {
 
-
                 Snackbar.make(nv_menu, "Loading data", Snackbar.LENGTH_SHORT)
                         .show();
 
-                ProfileFragment profile = new ProfileFragment();
                 android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.container, profile).commit();
                 toolbar.setTitle(item.getTitle());
 
 
             } else {
-                ProfileFragment profile = new ProfileFragment();
+
                 android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.container, profile).commit();
                 toolbar.setTitle(item.getTitle());
@@ -220,6 +223,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.it_map) {
             toolbar.setTitle(item.getTitle());
             MapFragment mapFragment = new MapFragment();
+
             android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.container, mapFragment).commit();
 
@@ -234,7 +238,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
 
             this.startActivities(new Intent[]{intent});
-
 
         } else if (id == R.id.nav_share) {
 

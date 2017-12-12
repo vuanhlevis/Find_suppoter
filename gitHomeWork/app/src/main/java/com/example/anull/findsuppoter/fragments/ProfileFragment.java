@@ -13,10 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Switch;
 
 import com.example.anull.findsuppoter.R;
+import com.example.anull.findsuppoter.Utils.ExpandableListAdapter;
+import com.example.anull.findsuppoter.Utils.ExpandableListAdapterProfile;
 import com.example.anull.findsuppoter.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +32,10 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -45,11 +53,25 @@ public class ProfileFragment extends Fragment {
     EditText et_available;
     EditText et_pass;
     ImageView iv_edit;
+    Switch sw_status;
+
+    String mlocation = "";
+
+    EditText et_chuyennganh;
     String rating = "0";
 
     RatingBar rt_profile;
 
     View view;
+
+    // expanlistview
+    private ExpandableListView listView;
+    private ExpandableListAdapterProfile listAdapter;
+
+    private List<String> listDataheader;
+    private HashMap<String, List<String>> listHash;
+
+    //
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference users;
@@ -88,6 +110,8 @@ public class ProfileFragment extends Fragment {
             et_available.setText("Enable");
         }
 
+        mlocation = user.getLocation();
+
         rating = user.getRating();
         rt_profile.setRating(Float.parseFloat(rating));
         pass = user.getPassword();
@@ -104,7 +128,11 @@ public class ProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         setUpInput();
 
-        EventBus.getDefault().register(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+
+        } else {
+            EventBus.getDefault().register(this);
+        }
 
 //        Log.d(TAG, "onCreateView:  user" + users);
 //        Log.d(TAG, "onCreateView:  data" + database.toString());
@@ -120,9 +148,107 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        et_chuyennganh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setOnclickchuyennganh();
+            }
+        });
+
 
         return view;
 
+
+    }
+
+    private void setOnclickchuyennganh() {
+        android.app.AlertDialog.Builder dialog =
+                new android.app.AlertDialog.Builder(getContext());
+        dialog.setTitle("CHOOSE OPTION");
+        dialog.setMessage("You can choose only 1 option!!");
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        View chuyennganh_layout = inflater.inflate(R.layout.fragment_choose, null);
+        listView = chuyennganh_layout.findViewById(R.id.lv_expand);
+        initData();
+
+        listAdapter = new ExpandableListAdapterProfile(chuyennganh_layout.getContext(), listDataheader, listHash);
+
+        listView.setAdapter(listAdapter);
+
+        dialog.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                    @Override
+                    public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+//                        int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(i,i1));
+//
+//                        listView.setItemChecked(position, true);
+
+                        return false;
+                    }
+                });
+
+
+                dialogInterface.dismiss();
+            }
+        });
+
+        dialog.setView(chuyennganh_layout);
+
+        dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void initData() {
+        listDataheader = new ArrayList<>();
+        listHash = new HashMap<>();
+
+        listDataheader.add("Information Technology");
+        listDataheader.add("Telecommunication");
+        listDataheader.add("Electronic");
+        listDataheader.add("Different");
+
+
+        List<String> cntt = new ArrayList<>();
+        List<String> vienthong = new ArrayList<>();
+        List<String> dientu = new ArrayList<>();
+        List<String> khac = new ArrayList<>();
+
+        cntt.add("Java");
+        cntt.add("C");
+        cntt.add("C++");
+        cntt.add("Android");
+        cntt.add("PHP");
+        cntt.add("Ruby");
+        cntt.add("Assembly");
+
+        vienthong.add("Ly Thuyet Thong Tin");
+        vienthong.add("Dien Tu Truyen Thong");
+        vienthong.add("Keo cap");
+        vienthong.add("Mang May Tinh");
+
+        dientu.add("Assembly");
+        dientu.add("IOT");
+        dientu.add("Robot");
+
+        khac.add("Giai Tich");
+        khac.add("Dai So");
+        khac.add("Nhung Nguyen Ly Co Ban Cua Chu Nghia Mac-Lenin");
+        khac.add("Giao Duc The Chat");
+
+        listHash.put(listDataheader.get(0), cntt);
+        listHash.put(listDataheader.get(1), vienthong);
+        listHash.put(listDataheader.get(2), dientu);
+        listHash.put(listDataheader.get(3), khac);
 
     }
 
@@ -134,6 +260,7 @@ public class ProfileFragment extends Fragment {
         et_phoneProfile = view.findViewById(R.id.et_phone_profile);
         et_available = view.findViewById(R.id.et_available);
         iv_edit = view.findViewById(R.id.iv_edit);
+        et_chuyennganh = view.findViewById(R.id.et_chuyennganh);
 
         et_pass = view.findViewById(R.id.et_password_profile);
 
@@ -152,6 +279,7 @@ public class ProfileFragment extends Fragment {
         final MaterialEditText mt_pass = editLayout.findViewById(R.id.et_password_editprofile);
         final MaterialEditText mt_phone = editLayout.findViewById(R.id.et_phone_editprofile);
 
+        sw_status = editLayout.findViewById(R.id.sw_status);
 
         mt_phone.setText(et_phoneProfile.getText());
         mt_name.setText(et_nameProfile.getText());
@@ -159,7 +287,11 @@ public class ProfileFragment extends Fragment {
 
         Log.d(TAG, "onClick:  + user " + firebaseAuth.getCurrentUser().getEmail());
 
-
+        if (et_available.getText().toString().equals("Dissable")) {
+            sw_status.setChecked(false);
+        } else {
+            sw_status.setChecked(true);
+        }
 
         dialog.setView(editLayout);
         dialog.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
@@ -200,12 +332,18 @@ public class ProfileFragment extends Fragment {
                                         Log.d(TAG, "onDataChange: snap" + userSnapshot);
                                         User user = userSnapshot.getValue(User.class);
                                         user.setRating(rating);
-                                        user.setAvailable("1");
+                                        if (sw_status.isChecked()) {
+                                            user.setAvailable("1");
+
+                                        } else {
+                                            user.setAvailable("0");
+                                        }
+
                                         user.setName(mt_name.getText().toString());
                                         user.setEmail(firebaseAuth.getCurrentUser().getEmail());
                                         user.setPhone(mt_phone.getText().toString());
                                         user.setPassword(mt_pass.getText().toString());
-                                        user.setLocation("0,0");
+                                        user.setLocation(mlocation);
 
                                         firebaseAuth.getCurrentUser().updatePassword(mt_pass.getText().toString());
 
@@ -229,7 +367,6 @@ public class ProfileFragment extends Fragment {
 
                             }
                         });
-
 
             }
         });
