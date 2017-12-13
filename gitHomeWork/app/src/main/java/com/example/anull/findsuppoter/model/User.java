@@ -1,5 +1,8 @@
 package com.example.anull.findsuppoter.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by null on 24/11/2017.
  */
@@ -7,7 +10,15 @@ package com.example.anull.findsuppoter.model;
 public class User {
     private String email, password, name, phone, available, rating;
     private String location;
+    private List<String> chuyennganh;
 
+    public List<String> getChuyennganh() {
+        return chuyennganh;
+    }
+
+    public void setChuyennganh(List<String> chuyennganh) {
+        this.chuyennganh = chuyennganh;
+    }
 
     public String getAvailable() {
         return available;
@@ -28,6 +39,7 @@ public class User {
     public User() {
         this.available = "0";
         this.location = "0,0";
+        this.chuyennganh = new ArrayList<>();
     }
 
     public String getLocation() {
@@ -38,14 +50,16 @@ public class User {
         this.location = location;
     }
 
-    public User(String email, String password, String name, String phone, String rating, String location) {
+    public User(String email, String password, String name, String phone, String available
+            , String rating, String location, List<String> chuyennganh) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
+        this.available = available;
         this.rating = rating;
         this.location = location;
-
+        this.chuyennganh = chuyennganh;
     }
 
     public String getEmail() {

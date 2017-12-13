@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fm_profile"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.anull.findsuppoter.fragments.ProfileFragment">
 
@@ -15,8 +15,10 @@
 
 
         <ScrollView
+            android:id="@+id/sv_scroll"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,14 +63,14 @@
 
                     <RatingBar
                         android:id="@+id/rt_profile"
+                        style="@style/Widget.AppCompat.RatingBar.Indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:isIndicator="true"
                         android:numStars="5"
                         android:rating="2.5"
-                        style="@style/Widget.AppCompat.RatingBar.Indicator"
-                        android:theme="@style/Widget.AppCompat.RatingBar.Indicator"/>
+                        android:theme="@style/Widget.AppCompat.RatingBar.Indicator" />
 
                     <ImageView
                         android:id="@+id/iv_edit"
@@ -88,8 +90,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:editable="false"
-                            android:text="Vu Anh"
-                            android:hint="Name" />
+                            android:hint="Name"
+                            android:text="Vu Anh" />
 
 
                     </android.support.design.widget.TextInputLayout>
@@ -102,10 +104,10 @@
                             android:id="@+id/et_phone_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="0981069795"
                             android:editable="false"
+                            android:hint="Phone"
                             android:inputType="none"
-                            android:hint="Phone" />
+                            android:text="0981069795" />
 
 
                     </android.support.design.widget.TextInputLayout>
@@ -118,10 +120,10 @@
                             android:id="@+id/et_mail_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="vuanhlevis@gmail.com"
-                            android:inputType="none"
                             android:editable="false"
-                            android:hint="Email" />
+                            android:hint="Email"
+                            android:inputType="none"
+                            android:text="vuanhlevis@gmail.com" />
 
 
                     </android.support.design.widget.TextInputLayout>
@@ -134,11 +136,11 @@
                             android:id="@+id/et_password_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="passs"
-                            android:inputType="textPassword"
                             android:editable="false"
                             android:enabled="false"
-                            android:hint="Password" />
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:text="passs" />
 
 
                     </android.support.design.widget.TextInputLayout>
@@ -149,42 +151,32 @@
 
                         <EditText
                             android:id="@+id/et_available"
-                            android:inputType="none"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Dissable"
                             android:editable="false"
-                            android:hint="Status" />
-
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/et_chuyennganh"
+                            android:hint="Status"
                             android:inputType="none"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="null"
-                            android:hint="Chuyen Nganh"
-                            android:editable="false" />
+                            android:text="Dissable" />
 
 
                     </android.support.design.widget.TextInputLayout>
 
-
-
-                    <ExpandableListView
-                        android:id="@+id/lv_expand_profile"
+                    <TextView
+                        android:id="@+id/tv_cn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:listSelector="#74cab1b1">
+                        android:text="Chuyen Nganh" />
 
-                    </ExpandableListView>
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_chuyennganh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="aijijiji
+                        scacsac
+                        mcksalcmaslcmkal"
+                        android:textSize="20sp"
 
+                        />
 
                 </LinearLayout>
 
@@ -193,6 +185,22 @@
         </ScrollView>
 
 
+        <!--<ListView-->
+            <!--android:id="@+id/lv_chuyennganh"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:scrollbars="none"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/sv_scroll">-->
+            <!---->
+        <!--</ListView>-->
+
+
     </android.support.constraint.ConstraintLayout>
+
 
 </FrameLayout>

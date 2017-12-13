@@ -28,6 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dmax.dialog.SpotsDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -247,6 +250,11 @@ public class LoginActivity extends AppCompatActivity {
                             user.setName(mt_name.getText().toString());
                             user.setAvailable("0");
                             user.setRating("3.5");
+                            List<String> fake = new ArrayList<>();
+                            fake.add("Null");
+
+
+                            user.setChuyennganh(fake);
 
                             final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this);
                             waitingDialog.show();

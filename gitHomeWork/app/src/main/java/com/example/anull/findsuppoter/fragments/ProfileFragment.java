@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.anull.findsuppoter.R;
 import com.example.anull.findsuppoter.Utils.ExpandableListAdapter;
@@ -54,10 +57,11 @@ public class ProfileFragment extends Fragment {
     EditText et_pass;
     ImageView iv_edit;
     Switch sw_status;
+    private TextView tv_cn;
+    private TextView tv_chuyennganh;
 
     String mlocation = "";
 
-    EditText et_chuyennganh;
     String rating = "0";
 
     RatingBar rt_profile;
@@ -70,6 +74,15 @@ public class ProfileFragment extends Fragment {
 
     private List<String> listDataheader;
     private HashMap<String, List<String>> listHash;
+
+
+    public static SparseArray<SparseBooleanArray> checkedPositionsPro = new SparseArray<>();
+    public static SparseArray<SparseBooleanArray> oldchecked = new SparseArray<>();
+
+    //
+    List<String> listCN;
+    List<String> listCNfake;
+    String mcn ="";
 
     //
 
@@ -92,6 +105,9 @@ public class ProfileFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         users = database.getReference("users");
+
+        listCN = new ArrayList<>();
+        listCNfake = new ArrayList<>();
     }
 
     @Subscribe(sticky = true)
@@ -109,6 +125,34 @@ public class ProfileFragment extends Fragment {
             et_available.setTextColor(getResources().getColor(R.color.bt_signIncolor));
             et_available.setText("Enable");
         }
+
+        listCN = user.getChuyennganh();
+        for (int i = 0; i < listCN.size(); i++) {
+            if (listCN.get(i) == null) {
+                listCN.remove(i);
+            }
+
+        }
+
+        for (int i = 0; i < listCN.size(); i++) {
+            if (listCN.get(i) == null) {
+                listCN.remove(i);
+            }
+
+        }
+
+        mcn = "";
+
+        for (int i = 0; i < listCN.size(); i++) {
+            if (listCN.get(i) != null) {
+                mcn += listCN.get(i) + "\n";
+            }
+        }
+
+        Log.d(TAG, "onReceiveUserEvent: " + listCN.toString());
+        Log.d(TAG, "onReceiveUserEvent: " + mcn);
+
+        tv_chuyennganh.setText(mcn);
 
         mlocation = user.getLocation();
 
@@ -134,10 +178,6 @@ public class ProfileFragment extends Fragment {
             EventBus.getDefault().register(this);
         }
 
-//        Log.d(TAG, "onCreateView:  user" + users);
-//        Log.d(TAG, "onCreateView:  data" + database.toString());
-//        Log.d(TAG, "onCreateView:  email" + firebaseAuth.getCurrentUser().getEmail());
-
         iv_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +188,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        et_chuyennganh.setOnClickListener(new View.OnClickListener() {
+        tv_cn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setOnclickchuyennganh();
@@ -177,21 +217,45 @@ public class ProfileFragment extends Fragment {
 
         listView.setAdapter(listAdapter);
 
+        oldchecked = checkedPositionsPro;
+        Log.d(TAG, "setOnclickchuyennganh: + checked" + oldchecked);
+
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+                Log.d(TAG, "onChildClick: ");
+                listAdapter.setClicked(i, i1);
+
+                Log.d(TAG, "onChildClick: + listspare" + listAdapter.checkedPositions.toString());
+
+                boolean isChecked = listAdapter.checkedPositions.get(i).get(i1);
+                if (isChecked) {
+
+
+                    Log.d(TAG, "onChildClick: adapter" + listAdapter.toString());
+
+
+                    listCNfake.add(listAdapter.getChild(i,i1).toString());
+                } else {
+                    for (int p = 0; p < listCNfake.size(); p++) {
+                        if (listCNfake.get(p).equals(listAdapter.getChild(i,i1).toString())) {
+                            listCNfake.remove(p);
+                        }
+                    }
+                }
+
+                Log.d(TAG, "onChildClick: list" + listCNfake.toString());
+
+                return false;
+            }
+        });
+
         dialog.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                    @Override
-                    public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-//                        int position = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(i,i1));
-//
-//                        listView.setItemChecked(position, true);
+                checkedPositionsPro = listAdapter.checkedPositions;
 
-                        return false;
-                    }
-                });
-
-
+                listCN = listCNfake;
                 dialogInterface.dismiss();
             }
         });
@@ -202,6 +266,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+
+                checkedPositionsPro = oldchecked;
+                Log.d(TAG, "onClick: checked" + oldchecked.toString());
+
             }
         });
 
@@ -260,9 +328,10 @@ public class ProfileFragment extends Fragment {
         et_phoneProfile = view.findViewById(R.id.et_phone_profile);
         et_available = view.findViewById(R.id.et_available);
         iv_edit = view.findViewById(R.id.iv_edit);
-        et_chuyennganh = view.findViewById(R.id.et_chuyennganh);
 
         et_pass = view.findViewById(R.id.et_password_profile);
+        tv_cn = view.findViewById(R.id.tv_cn);
+        tv_chuyennganh = view.findViewById(R.id.tv_chuyennganh);
 
 
     }
@@ -344,6 +413,7 @@ public class ProfileFragment extends Fragment {
                                         user.setPhone(mt_phone.getText().toString());
                                         user.setPassword(mt_pass.getText().toString());
                                         user.setLocation(mlocation);
+                                        user.setChuyennganh(listCN);
 
                                         firebaseAuth.getCurrentUser().updatePassword(mt_pass.getText().toString());
 
@@ -395,6 +465,15 @@ public class ProfileFragment extends Fragment {
             et_available.setTextColor(getResources().getColor(R.color.bt_signIncolor));
             et_available.setText("Enable");
         }
+
+        mcn = "";
+        for (int i = 0; i < listCN.size(); i ++) {
+            if (listCN.get(i) != null) {
+                mcn += listCN.get(i) + "\n";
+            }
+            Log.d(TAG, "updateProfile: " + mcn);
+        }
+        Log.d(TAG, "updateProfile: " + listCN.toString());
 
     }
 

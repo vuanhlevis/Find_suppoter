@@ -3,15 +3,19 @@ package com.example.anull.findsuppoter.Utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.example.anull.findsuppoter.R;
+import com.example.anull.findsuppoter.fragments.ProfileFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +29,8 @@ public class ExpandableListAdapterProfile extends BaseExpandableListAdapter {
     private Context context;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listHashMap;
+
+    public SparseArray<SparseBooleanArray> checkedPositions = new SparseArray<>();
 
     public ExpandableListAdapterProfile(Context context, List<String> listDataHeader,
                                         HashMap<String, List<String>> listHashMap) {
@@ -61,12 +67,12 @@ public class ExpandableListAdapterProfile extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int i, int i1) {
-        return 0;
+        return i1;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
@@ -91,15 +97,20 @@ public class ExpandableListAdapterProfile extends BaseExpandableListAdapter {
 
         String childText = (String) getChild(i,i1);
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.list_child_check_expandable, null);
+            LayoutInflater inflater = LayoutInflater.from(context);
+            view = inflater.inflate(android.R.layout.simple_list_item_multiple_choice, viewGroup, false);
         }
 
-//        ExpandableListView listView = view.findViewById(R.id.lv_expand_profile);
+        ((CheckedTextView)view).setText(getChild(i, i1).toString());
+        checkedPositions = ProfileFragment.checkedPositionsPro;
 
-
-        CheckBox cb_childtext = view.findViewById(R.id.cb_child);
-        cb_childtext.setText(childText);
+        if (checkedPositions.get(i) != null) {
+            boolean isChecked = checkedPositions.get(i).get(i1);
+            ((CheckedTextView)view).setChecked(isChecked);
+            // If it does not exist, mark the checkBox as false
+        } else {
+            ((CheckedTextView)view).setChecked(false);
+        }
 
         return view;
 
@@ -109,5 +120,21 @@ public class ExpandableListAdapterProfile extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int i, int i1) {
 
         return true;
+    }
+
+    public void setClicked(int grPos, int childPos) {
+        SparseBooleanArray checkedChildPositionsMultiple = checkedPositions.get(grPos);
+        // if in the group there was not any child checked
+        if (checkedChildPositionsMultiple == null) {
+            checkedChildPositionsMultiple = new SparseBooleanArray();
+            // By default, the status of a child is not checked
+            // So a click will enable it
+            checkedChildPositionsMultiple.put(childPos, true);
+            checkedPositions.put(grPos, checkedChildPositionsMultiple);
+        } else {
+            boolean oldState = checkedChildPositionsMultiple.get(childPos);
+            checkedChildPositionsMultiple.put(childPos, !oldState);
+        }
+        notifyDataSetChanged();
     }
 }
