@@ -11,8 +11,9 @@
 
     <color name="bt_registercolor">#83838c</color>
     <color name="baseReleaseColor">#e1000000</color>
-    <color name="basePressColor">#FAFAFA</color>
+    <color name="basePressColor">#fafafa</color>
     <color name="ballPressColor">#9E9E9E</color>
     <color name="TextNaviColor">#c38e05d3</color>
     <color name="TextgreenColor">#842222b7</color>
+    <color name="backgroundMess">#F0F4C3</color>
 </resources>

@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.anull.findsuppoter.R;
 import com.example.anull.findsuppoter.Utils.ExpandableListAdapter;
 import com.example.anull.findsuppoter.Utils.MylocationListener;
+import com.example.anull.findsuppoter.activities.ChatActivity;
 import com.example.anull.findsuppoter.model.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -179,30 +180,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void getUser() {
-        databaseReference.orderByChild("email").equalTo(firebaseAuth.getCurrentUser().getEmail())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG, "onDataChange: " + dataSnapshot);
-                        if (dataSnapshot.getChildrenCount() > 0) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Log.d(TAG, "map: snap" + snapshot);
-                                User user = snapshot.getValue(User.class);
+        if (databaseReference != null) {
+            databaseReference.orderByChild("email").equalTo(firebaseAuth.getCurrentUser().getEmail())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.d(TAG, "onDataChange: " + dataSnapshot);
+                            if (dataSnapshot.getChildrenCount() > 0) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    Log.d(TAG, "map: snap" + snapshot);
+                                    User user = snapshot.getValue(User.class);
 
-                                user.setLocation(mylocation);
+                                    user.setLocation(mylocation);
 
-                                userPhone = user.getPhone();
-                                databaseReference.child(snapshot.getKey()).setValue(user);
+                                    userPhone = user.getPhone();
+                                    databaseReference.child(snapshot.getKey()).setValue(user);
+                                }
                             }
+
                         }
 
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+        }
 
-                    }
-                });
+
     }
 
 
@@ -221,7 +226,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 dialog.setTitle("CHOOSE OPTION");
                 dialog.setMessage("You can choose only 1 option!!");
 
-                LayoutInflater inflater = LayoutInflater.from(getContext());
+                final LayoutInflater inflater = LayoutInflater.from(getContext());
 
                 View chuyennganh_layout = inflater.inflate(R.layout.fragment_choose, null);
                 listView = chuyennganh_layout.findViewById(R.id.lv_expand);
@@ -355,7 +360,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                 return true;
                                             }
 
-                                            private void setupShow(View view1, Marker marker) {
+                                            private void setupShow(final View view1, Marker marker) {
                                                 TextView tv_nameshow = view1.findViewById(R.id.tv_name_showinfo);
                                                 final TextView tv_phoneshow = view1.findViewById(R.id.tv_phone_showinfor);
                                                 Button bt_call = view1.findViewById(R.id.bt_call);
@@ -381,15 +386,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                 bt_message.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
-                                                        ChatFragment chatFragment = new ChatFragment();
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putString("phone", tv_phoneshow.getText().toString());
-                                                        bundle.putString("userphone", userPhone);
-                                                        chatFragment.setArguments(bundle);
-                                                        android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                                        fragmentTransaction.replace(R.id.container,chatFragment);
-                                                        fragmentTransaction.addToBackStack(null);
-                                                        fragmentTransaction.commit();
+                                                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                                        intent.putExtra("phone", tv_phoneshow.getText().toString());
+                                                        intent.putExtra("phoneUser", userPhone);
+                                                        startActivity(intent);
+
+
+//                                                        ChatFragment chatFragment = new ChatFragment();
+//                                                        Bundle bundle = new Bundle();
+//                                                        bundle.putString("phone", tv_phoneshow.getText().toString());
+//                                                        bundle.putString("userphone", userPhone);
+//                                                        chatFragment.setArguments(bundle);
+//                                                        android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                                                        fragmentTransaction.replace(R.id.container,chatFragment);
+//                                                        fragmentTransaction.addToBackStack(null);
+//                                                        fragmentTransaction.commit();
                                                     }
                                                 });
 

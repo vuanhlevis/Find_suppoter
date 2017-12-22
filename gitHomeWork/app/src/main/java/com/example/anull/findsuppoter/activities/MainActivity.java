@@ -2,7 +2,6 @@ package com.example.anull.findsuppoter.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.anull.findsuppoter.R;
-import com.example.anull.findsuppoter.fragments.ChatFragment;
 import com.example.anull.findsuppoter.fragments.ChooseFragment;
 import com.example.anull.findsuppoter.fragments.MapFragment;
 import com.example.anull.findsuppoter.fragments.ProfileFragment;
@@ -37,7 +35,6 @@ import org.greenrobot.eventbus.EventBus;
 import dmax.dialog.SpotsDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -231,10 +228,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.it_mssage) {
             toolbar.setTitle(item.getTitle());
 
-            ChatFragment chatFragment = new ChatFragment();
-
-            android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.container, chatFragment).commit();
 
         } else if (id == R.id.it_logout) {
             SpotsDialog waitingDialog = new SpotsDialog(this);
