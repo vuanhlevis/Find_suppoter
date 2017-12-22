@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.anull.findsuppoter.R;
+import com.example.anull.findsuppoter.fragments.ChatFragment;
 import com.example.anull.findsuppoter.fragments.ChooseFragment;
 import com.example.anull.findsuppoter.fragments.MapFragment;
 import com.example.anull.findsuppoter.fragments.ProfileFragment;
@@ -229,6 +230,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.it_mssage) {
             toolbar.setTitle(item.getTitle());
+
+            ChatFragment chatFragment = new ChatFragment();
+
+            android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.container, chatFragment).commit();
 
         } else if (id == R.id.it_logout) {
             SpotsDialog waitingDialog = new SpotsDialog(this);

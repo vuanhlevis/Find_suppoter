@@ -4,13 +4,16 @@ package com.example.anull.findsuppoter.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +62,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
+
 import static android.content.Context.LOCATION_SERVICE;
 
 /**
@@ -85,6 +91,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     private GoogleMap gg_map;
+
+    private String userPhone = null;
 
     MapView mvmap;
     View mview;
@@ -183,6 +191,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                                 user.setLocation(mylocation);
 
+                                userPhone = user.getPhone();
                                 databaseReference.child(snapshot.getKey()).setValue(user);
                             }
                         }
@@ -233,10 +242,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     }
                 });
 
+                final SpotsDialog waitingDialog = new SpotsDialog(getContext());
 
                 dialog.setPositiveButton("SELECT", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(DialogInterface dialogInterface, final int i) {
+                        waitingDialog.show();
                         if (findSupport == null) {
                             Snackbar.make(view, "You Must Be Choose An Option", Snackbar.LENGTH_LONG)
                                     .show();
@@ -258,8 +269,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                 if (user.getEmail().equals(firebaseAuth.getCurrentUser().getEmail())) {
 
                                                 } else {
-                                                    userList.add(user);
+                                                    for (int i = 0; i < user.getChuyennganh().size(); i++) {
+                                                        if (user.getChuyennganh().get(i).equals(findSupport)) {
+
+                                                            userList.add(user);
+                                                        }
+                                                    }
+
                                                 }
+
+                                                Log.d(TAG, "onDataChange: + matches choose" + findSupport);
+                                                Log.d(TAG, "onDataChange: + matches cn" + user.getChuyennganh().toString());
+                                                Log.d(TAG, "onDataChange: + matches check" +
+                                                        findSupport.toLowerCase()
+                                                                .matches(".*" + user.getChuyennganh().toString().toLowerCase() + ".*"));
+
 
                                             }
                                         }
@@ -271,14 +295,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                         gg_map.clear();
 
                                         markerOptionsList.clear();
+                                        LatLng latLng = null;
+                                        LatLng latLngcamera = null;
+
                                         if (userList.size() > 0) {
                                             for (int i = 0; i < userList.size(); i++) {
                                                 String[] parseLocation = userList.get(i).getLocation().split(",");
                                                 double lat = Double.parseDouble(parseLocation[0]);
                                                 double lng = Double.parseDouble(parseLocation[1]);
-                                                LatLng latLng = new LatLng(lat, lng);
+                                                latLng = new LatLng(lat, lng);
 
                                                 MarkerOptions markerOptions = new MarkerOptions()
+                                                        .title(userList.get(i).getName())
+                                                        .snippet(userList.get(i).getPhone())
                                                         .position(latLng);
                                                 gg_map.addMarker(markerOptions);
 
@@ -289,18 +318,83 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             Toast.makeText(getContext(), "There is no people available your option", Toast.LENGTH_SHORT).show();
                                         }
 
-//                                        gg_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//                                            @Override
-//                                            public boolean onMarkerClick(Marker marker) {
-//                                                if (markerOptionsList.size() > 0) {
-//                                                    for (int i = 0; i < markerOptionsList.size(); i++) {
-//
-//                                                    }
-//                                                }
-//
-//                                                return true;
-//                                            }
-//                                        });
+                                        if (userList.size() > 0) {
+                                            String[] parseLocation = userList.get(0).getLocation().split(",");
+                                            double lat = Double.parseDouble(parseLocation[0]);
+                                            double lng = Double.parseDouble(parseLocation[1]);
+                                            latLngcamera = new LatLng(lat, lng);
+                                        }
+
+                                        if (latLngcamera != null) {
+                                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLngcamera, 15);
+                                            gg_map.animateCamera(cameraUpdate);
+                                        }
+
+                                        waitingDialog.dismiss();
+
+                                        gg_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                            @Override
+                                            public boolean onMarkerClick(Marker marker) {
+
+                                                AlertDialog.Builder dialog =
+                                                        new AlertDialog.Builder(getContext());
+                                                dialog.setTitle("Profile Supporter");
+                                                dialog.setMessage("You Can Call Or Send Message");
+
+                                                LayoutInflater inflater = LayoutInflater.from(getContext());
+
+                                                View layout_pro_map = inflater.inflate(R.layout.layout_show_infosupport, null);
+
+
+                                                dialog.setView(layout_pro_map);
+
+                                                setupShow(layout_pro_map, marker);
+
+                                                dialog.show();
+
+                                                return true;
+                                            }
+
+                                            private void setupShow(View view1, Marker marker) {
+                                                TextView tv_nameshow = view1.findViewById(R.id.tv_name_showinfo);
+                                                final TextView tv_phoneshow = view1.findViewById(R.id.tv_phone_showinfor);
+                                                Button bt_call = view1.findViewById(R.id.bt_call);
+                                                Button bt_message = view1.findViewById(R.id.bt_message);
+
+                                                tv_nameshow.setText(marker.getTitle());
+                                                tv_phoneshow.setText(marker.getSnippet());
+
+                                                bt_call.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                                        callIntent.setData(Uri.parse("tel:"+tv_phoneshow.getText().toString()));
+
+                                                        if (ActivityCompat.checkSelfPermission(getContext(),
+                                                                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                                            return;
+                                                        }
+                                                        startActivity(callIntent);
+                                                    }
+                                                });
+
+                                                bt_message.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        ChatFragment chatFragment = new ChatFragment();
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putString("phone", tv_phoneshow.getText().toString());
+                                                        bundle.putString("userphone", userPhone);
+                                                        chatFragment.setArguments(bundle);
+                                                        android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                                        fragmentTransaction.replace(R.id.container,chatFragment);
+                                                        fragmentTransaction.addToBackStack(null);
+                                                        fragmentTransaction.commit();
+                                                    }
+                                                });
+
+                                            }
+                                        });
 
 
                                     }
@@ -328,6 +422,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         return mview;
     }
+
+
 
     private void initData() {
         listDataheader = new ArrayList<>();

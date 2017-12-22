@@ -108,6 +108,7 @@
             android:layout_weight="1"
             android:background="@drawable/background_bt_register"
             android:text="CALL NOW"
+            android:layout_marginBottom="20dp"
             android:textColor="@color/bt_registercolor" />
 
         <Button
@@ -118,7 +119,8 @@
             android:layout_weight="1"
             android:background="@drawable/background_bt_login"
             android:text="MESSAGE"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 

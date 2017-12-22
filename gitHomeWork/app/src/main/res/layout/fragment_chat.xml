@@ -1,0 +1,42 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.anull.findsuppoter.fragments.ChatFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_weight="20"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView">
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/layout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/layout1">
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <include
+            android:layout_gravity="bottom"
+            layout="@layout/message_arena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:layout_marginTop="5dp"/>
+
+    </LinearLayout>
+
+</FrameLayout>
