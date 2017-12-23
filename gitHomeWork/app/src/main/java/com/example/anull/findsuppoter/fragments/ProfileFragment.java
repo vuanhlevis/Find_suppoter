@@ -82,7 +82,7 @@ public class ProfileFragment extends Fragment {
     //
     List<String> listCN;
     List<String> listCNfake;
-    String mcn ="";
+    String mcn = "";
 
     //
 
@@ -235,10 +235,10 @@ public class ProfileFragment extends Fragment {
                     Log.d(TAG, "onChildClick: adapter" + listAdapter.toString());
 
 
-                    listCNfake.add(listAdapter.getChild(i,i1).toString());
+                    listCNfake.add(listAdapter.getChild(i, i1).toString());
                 } else {
                     for (int p = 0; p < listCNfake.size(); p++) {
-                        if (listCNfake.get(p).equals(listAdapter.getChild(i,i1).toString())) {
+                        if (listCNfake.get(p).equals(listAdapter.getChild(i, i1).toString())) {
                             listCNfake.remove(p);
                         }
                     }
@@ -253,9 +253,38 @@ public class ProfileFragment extends Fragment {
         dialog.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                final SpotsDialog waitingDialog = new SpotsDialog(getContext());
+                waitingDialog.show();
                 checkedPositionsPro = listAdapter.checkedPositions;
 
                 listCN = listCNfake;
+
+
+                users.orderByChild("email").equalTo(firebaseAuth.getCurrentUser().getEmail())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getChildrenCount() > 0) {
+                                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+
+                                        Log.d(TAG, "onDataChange: snap" + userSnapshot);
+                                        User user = userSnapshot.getValue(User.class);
+                                        user.setChuyennganh(listCN);
+
+                                        users.child(userSnapshot.getKey()).setValue(user);
+
+                                        updateProfile(user);
+                                    }
+                                }
+
+                                waitingDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                 dialogInterface.dismiss();
             }
         });
@@ -467,7 +496,7 @@ public class ProfileFragment extends Fragment {
         }
 
         mcn = "";
-        for (int i = 0; i < listCN.size(); i ++) {
+        for (int i = 0; i < listCN.size(); i++) {
             if (listCN.get(i) != null) {
                 mcn += listCN.get(i) + "\n";
             }

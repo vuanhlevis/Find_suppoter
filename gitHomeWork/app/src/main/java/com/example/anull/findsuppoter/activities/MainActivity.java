@@ -185,10 +185,6 @@ public class MainActivity extends AppCompatActivity
         setTitle(item.getTitle());
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -225,10 +221,6 @@ public class MainActivity extends AppCompatActivity
             android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.container, mapFragment).commit();
 
-        } else if (id == R.id.it_mssage) {
-            toolbar.setTitle(item.getTitle());
-
-
         } else if (id == R.id.it_logout) {
             SpotsDialog waitingDialog = new SpotsDialog(this);
             waitingDialog.show();
@@ -237,17 +229,9 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
 
             this.startActivities(new Intent[]{intent});
-
-        } else if (id == R.id.nav_share) {
-
-            ChooseFragment mapFragment = new ChooseFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.container, mapFragment).commit();
-
-        } else if (id == R.id.nav_send) {
+            MainActivity.this.finish();
 
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

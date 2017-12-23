@@ -142,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(400, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp2.setMargins(5,5,5,5);
+        lp2.setMargins(5,10,5,5);
         lp2.weight = 1.0f;
 
         if (type == 1) {

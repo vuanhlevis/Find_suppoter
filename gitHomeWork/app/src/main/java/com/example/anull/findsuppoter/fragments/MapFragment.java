@@ -133,10 +133,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(TAG, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
                 mlocation = new LatLng(location.getLatitude(), location.getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mlocation, 15);
-                gg_map.animateCamera(cameraUpdate);
+                if (gg_map!= null) {
+                    gg_map.animateCamera(cameraUpdate);
 
-                mylocation = location.getLatitude() + "," + location.getLongitude();
-                Log.d(TAG, "onLocationChanged: " + mlocation.toString());
+                    mylocation = location.getLatitude() + "," + location.getLongitude();
+                    Log.d(TAG, "onLocationChanged: " + mlocation.toString());
+
+                }
 
                 getUser();
 
