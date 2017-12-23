@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@drawable/user" />
 
     <RatingBar
         android:id="@+id/rt_show_profile"
@@ -66,18 +66,19 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="start"
             android:layout_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/stat_sys_phone_call_forward" />
+            app:srcCompat="@drawable/call" />
 
         <TextView
             android:id="@+id/tv_phone_showinfor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="0981069795"
             app:layout_constraintLeft_toRightOf="@id/imageView4"
             app:layout_constraintTop_toTopOf="parent" />

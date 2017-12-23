@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Arkhip_font.ttf")
+                .setDefaultFontPath("fonts/VnSouthern.TTF")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
@@ -126,11 +126,11 @@ public class ChatActivity extends AppCompatActivity {
 
     public void addMessageBox(String message, int type) {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Arkhip_font.ttf")
+                .setDefaultFontPath("fonts/VnSouthern.TTF")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(),"fonts/Arkhip_font.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(),"fonts/VnSouthern.TTF");
 
 
         TextView textView = new TextView(ChatActivity.this);

@@ -40,7 +40,7 @@ public class ChooseFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Arkhip_font.ttf")
+                .setDefaultFontPath("fonts/VnSouthern.TTF")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         // Inflate the layout for this fragment

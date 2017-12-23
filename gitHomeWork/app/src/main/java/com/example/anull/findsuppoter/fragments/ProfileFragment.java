@@ -98,7 +98,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Arkhip_font.ttf")
+                .setDefaultFontPath("fonts/VnSouthern.TTF")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         super.onCreate(savedInstanceState);
@@ -165,7 +165,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Arkhip_font.ttf")
+                .setDefaultFontPath("fonts/VnSouthern.TTF")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         // Inflate the layout for this fragment

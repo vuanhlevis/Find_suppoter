@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryCyan">#60C99A</color>
-    <color name="colorPrimary">#0a091b</color>
-    <color name="colorPrimaryDark">#070716</color>
-    <color name="colorAccent">#00D2C1</color>
+    <color name="colorPrimaryCyan">#33cccc</color>
+    <color name="colorPrimary">#33cccc</color>
+    <color name="colorPrimaryDark">#d033cccc</color>
+    <color name="colorAccent">#33cccc</color>
 
     <color name="bottomText">#6b6b76</color>
     <color name="login_btcolor_effect">#f816a463</color>
-    <color name="bt_signIncolor">#1fbad6</color>
+    <color name="bt_signIncolor">#33cccc</color>
 
     <color name="bt_registercolor">#83838c</color>
     <color name="baseReleaseColor">#e1000000</color>

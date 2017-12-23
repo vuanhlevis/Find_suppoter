@@ -18,16 +18,16 @@
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
+            android:textColor="@color/baseReleaseColor"
+            android:textColorHint="@color/baseReleaseColor"
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             app:met_singleLineEllipsis="true"
-            app:met_baseColor="@color/colorPrimary"
+            app:met_baseColor="@color/baseReleaseColor"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/baseReleaseColor"
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -35,16 +35,16 @@
             android:hint="PassWord"
             android:inputType="textPassword"
             android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
+            android:textColor="@color/baseReleaseColor"
+            android:textColorHint="@color/baseReleaseColor"
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             app:met_singleLineEllipsis="true"
-            app:met_baseColor="@color/colorPrimary"
+            app:met_baseColor="@color/baseReleaseColor"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/baseReleaseColor"
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -52,16 +52,16 @@
             android:hint="Name"
             android:inputType="text"
             android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
+            android:textColor="@color/baseReleaseColor"
+            android:textColorHint="@color/baseReleaseColor"
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             app:met_singleLineEllipsis="true"
-            app:met_baseColor="@color/colorPrimary"
+            app:met_baseColor="@color/baseReleaseColor"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/baseReleaseColor"
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -69,16 +69,16 @@
             android:hint="Phone"
             android:inputType="phone"
             android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
+            android:textColor="@color/baseReleaseColor"
+            android:textColorHint="@color/baseReleaseColor"
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             app:met_singleLineEllipsis="true"
-            app:met_baseColor="@color/colorPrimary"
+            app:met_baseColor="@color/baseReleaseColor"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/baseReleaseColor"
             />
 
     </LinearLayout>

@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Arkhip_font.ttf")
+                .setDefaultFontPath("fonts/VnSouthern.TTF")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
